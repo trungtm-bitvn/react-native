@@ -31,18 +31,33 @@ export default class App extends Component {
           return place.key === key;
         })
       }
-      // return {
-      //   places: prevState.places.filter(place => {
-      //     return place.key !== key;
-      //   })
-      // };
     });
+  };
+  modalClosedHandler = () => (
+    this.setState({
+      selectedPlace: null
+    })
+  );
+  
+  placeDeletedHandler = () => {
+    this.setState(prevState => {
+      return {
+        places: prevState.places.filter(place => {
+          return place.key !== prevState.selectedPlace.key;
+        }),
+        selectedPlace: null
+      };
+    })
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <PlaceDetail selectedPlace={this.state.selectedPlace}/>
+        <PlaceDetail 
+          selectedPlace={this.state.selectedPlace} 
+          onModalClosed={this.modalClosedHandler}
+          onPlaceDeleted={this.placeDeletedHandler}
+          />
         <PlaceInput onPlaceAdded={this.placeAddedHandler} />
         <PlaceList
           places={this.state.places}

@@ -22,8 +22,11 @@ const placeDetail = props => {
             <View style={styles.modalContainer} >
                 {modalContent}
                 <View>
-                    <Button title="Delete" color="red"/>
-                    <Button title="Close" />
+                    <Button 
+                        title="Delete" 
+                        color="red" 
+                        onPress={props.onPlaceDeleted}/>
+                    <Button title="Close" onPress={props.onModalClosed}/>
                 </View>
             </View>
             

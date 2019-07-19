@@ -1,66 +1,39 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
-
+import { Provider, connect } from 'react-redux';
+import configureStore from './src/store/configureStore';
+import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/actions/index';
+ 
 import PlaceInput from "./src/components/PlaceInput/PlaceInput";
 import PlaceList from "./src/components/PlaceList/PlaceList";
 import PlaceDetail from "./src/components/PlaceDetail/PlaceDetail";
 
-export default class App extends Component {
-  state = {
-    places: [],
-    selectedPlace: null
-  };
-
+class App extends Component {
   placeAddedHandler = placeName => {
-    this.setState(prevState => {
-      return {
-        places: prevState.places.concat({
-          key: Math.random().toString(),
-          name: placeName,
-          image: {
-            uri: "https://upload.wikimedia.org/wikipedia/commons/6/62/Paracas_National_Reserve%2C_Ica%2C_Peru-3April2011.jpg"
-          }
-        })
-      };
-    });
+    this.props.onAddPlace(placeName);
   };
   placeSelectedHandler = key => {
-    this.setState(prevState => {
-      return {
-        selectedPlace: prevState.places.find(place => {
-          return place.key === key;
-        })
-      }
-    });
+    this.props.selectPlace(key);
   };
-  modalClosedHandler = () => (
-    this.setState({
-      selectedPlace: null
-    })
-  );
+  modalClosedHandler = () => {
+    this.props.deselectPlace();
+  };
   
   placeDeletedHandler = () => {
-    this.setState(prevState => {
-      return {
-        places: prevState.places.filter(place => {
-          return place.key !== prevState.selectedPlace.key;
-        }),
-        selectedPlace: null
-      };
-    })
+    this.props.onDeletePlace();
   };
 
   render() {
     return (
       <View style={styles.container}>
         <PlaceDetail 
-          selectedPlace={this.state.selectedPlace} 
+          selectedPlace={this.props.selectedPlace} 
           onModalClosed={this.modalClosedHandler}
           onPlaceDeleted={this.placeDeletedHandler}
           />
         <PlaceInput onPlaceAdded={this.placeAddedHandler} />
         <PlaceList
-          places={this.state.places}
+          places={this.props.places}
           onItemSelected={this.placeSelectedHandler}
         />
       </View>
@@ -78,3 +51,29 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start"
   }
 });
+
+const mapStateToProps = state => {
+  return {
+    places: state.places.places,
+    selectedPlace: state.places.selectedPlace
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddPlace: (name) => dispatch(addPlace(name)),
+    onDeletePlace: () => dispatch(deletePlace()),
+    selectPlace: (key) => dispatch(selectPlace(key)),
+    deselectPlace: () => dispatch(deselectPlace())
+  };
+};
+
+const store = configureStore();
+const ConnectAppScreen = connect(mapStateToProps, mapDispatchToProps)(App);
+
+const RNRedux = () => (
+  <Provider store={store}>
+    <ConnectAppScreen />
+  </Provider>
+);
+export default RNRedux;

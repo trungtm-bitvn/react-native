@@ -1,15 +1,19 @@
-import { createStackNavigator, createAppContainer} from 'react-navigation';
+import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import React, { Component } from 'react';
 
 import AuthScreen from './src/screens/Auth/Auth';
+import MainScreen from './src/screens/MainTabs/startMainTabs';
 
-const AppNavigator = createStackNavigator(
+const AppNavigator = createSwitchNavigator(
   {
     Auth: {
       screen: AuthScreen, 
       navigationOptions: ({navigation}) => ({
         title: 'Authentication'
       }),
+    },
+    Main: {
+      screen: MainScreen 
     }
   },
   {

@@ -1,26 +1,37 @@
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import React from 'react';
 
 import SharePlaceScreen from '../SharePlace/SharePlace';
 import FindPlaceScreen from '../FindPlace/FindPlace';
+import PlaceDetailScreen from '../PlaceDetail/PlaceDetail';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-const startMainTabs = createBottomTabNavigator({
-    SharePlace: {
-        screen: SharePlaceScreen,
-        navigationOptions: {
-            title: 'Share Place',
-            tabBarIcon: (<MaterialCommunityIcons name="share" size={30} />)  
+const FindPlaceStack = createStackNavigator(
+    {
+        FindPlace: {
+            screen: FindPlaceScreen,
+        },
+        PlaceDetail: {
+            screen: PlaceDetailScreen
         }
     },
-    FindPlace: {
-        screen: FindPlaceScreen,
-        navigationOptions: {
-            title: 'Find Place',
-            tabBarIcon: (<MaterialCommunityIcons name="map-search" size={30} />)  
-        }
+    {
+        initialRouteName: 'FindPlace',
     }
-});
+);
+
+const startMainTabs = createBottomTabNavigator(
+    {
+        SharePlace: {
+            screen: SharePlaceScreen
+        },
+        FindPlaceStack: {
+            screen: FindPlaceStack,
+        }
+    },
+    {
+        initialRouteName: 'SharePlace',
+    }
+);
 
 export default startMainTabs;
 

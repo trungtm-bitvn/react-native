@@ -1,17 +1,37 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import PlaceInput from '../../components/PlaceInput/PlaceInput';
+
+import { connect } from 'react-redux';
+import { addPlace } from '../../store/actions/index';
+
+
 class SharePlaceScreen extends Component {
+    static navigationOptions = {
+        title: 'Share Places',
+        tabBarIcon: (<MaterialCommunityIcons name="share" size={30} />)  
+    }
+
+    placeAddedHandler = (placeName) => {
+        this.props.onPlaceAdded(placeName);
+    }
+
     render() {
         return (
-            <View style={styles.sharePlaceContainer}>
-                <Text>On SharePlaceScreen</Text>
-            </View>
+            <PlaceInput onPlaceAdded={this.placeAddedHandler} />
     )}
 }
+
 const styles = StyleSheet.create({
-    sharePlaceContainer: {
-        marginTop: 30
-    } 
 });
-export default SharePlaceScreen;
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onPlaceAdded: (placeName) => dispatch(addPlace(placeName))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(SharePlaceScreen);

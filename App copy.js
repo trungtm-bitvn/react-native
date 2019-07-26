@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { Provider, connect } from 'react-redux';
 import configureStore from './src/store/configureStore';
-import { addPlace, deletePlace, selectPlace, deselectPlace } from './src/store/actions/index';
+import { addPlace, deletePlace} from './src/store/actions/index';
  
 import PlaceInput from "./src/components/PlaceInput/PlaceInput";
 import PlaceList from "./src/components/PlaceList/PlaceList";

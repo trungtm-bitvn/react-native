@@ -7,17 +7,27 @@ import PlaceDetailScreen from '../PlaceDetail/PlaceDetail';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+const getTabBarIcon = (navigation, focused, tintColor) => {
+    const { routeName } = navigation.state;
+    let IconComponent = MaterialCommunityIcons;
+    let iconName;
+    if (routeName === 'SharePlace') {
+        iconName = 'share';
+    } else if (routeName === 'FindPlaceStack') {
+        iconName = 'map-search';
+    }
+
+    return <IconComponent name={iconName} size={30} color={tintColor} />
+}
+
 const FindPlaceStack = createStackNavigator(
     {
         FindPlace: {
             screen: FindPlaceScreen,
         },
         PlaceDetail: {
-            screen: PlaceDetailScreen
+            screen: PlaceDetailScreen, 
         }
-    },
-    {
-        initialRouteName: 'FindPlace',
     }
 );
 
@@ -30,12 +40,18 @@ const startMainTabs = createBottomTabNavigator(
             screen: FindPlaceStack,
             navigationOptions: {
                 title: 'Find Places',
-                tabBarIcon: (<MaterialCommunityIcons name="map-search" size={30} />)
             }
         }
     },
     {
         initialRouteName: 'SharePlace',
+        defaultNavigationOptions: ({navigation}) => ({
+            tabBarIcon: ({focused, tintColor}) => getTabBarIcon(navigation, focused, tintColor),
+        }),
+        tabBarOptions: {
+            // activeTintColor: '#008000',
+            // inactiveTintColor: 'gray'
+        }
     }
 );
 

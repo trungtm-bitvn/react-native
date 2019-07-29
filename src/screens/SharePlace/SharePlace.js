@@ -12,7 +12,6 @@ import { addPlace } from '../../store/actions/index';
 class SharePlaceScreen extends Component {
     static navigationOptions = {
         title: 'Share Places',
-        tabBarIcon: (<MaterialCommunityIcons name="share" size={30} />)  
     }
 
     placeAddedHandler = (placeName) => {

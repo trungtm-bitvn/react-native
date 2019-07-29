@@ -3,6 +3,14 @@ import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 
 class placeDetailScreen extends Component {
+    static navigationOptions = ({navigation}) => {
+        let selectedPlace = navigation.getParam('selectedPlace');
+        name = selectedPlace ?  selectedPlace.name : 'Find Place';
+        return {
+            title: name
+        }
+    }
+    
     render() {
         selectedPlace = this.props.navigation.getParam('selectedPlace');
         return (
@@ -12,7 +20,6 @@ class placeDetailScreen extends Component {
                         source={selectedPlace.image} 
                         style={styles.placeImage}
                     />
-                    <Text style={styles.placeName}>{selectedPlace.name}</Text>
                 </View>
                 <View>
                     <TouchableOpacity onPress={this.props.onPlaceDeleted}>

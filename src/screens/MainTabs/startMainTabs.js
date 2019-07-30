@@ -13,38 +13,25 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     let iconName;
     if (routeName === 'SharePlace') {
         iconName = 'share';
-    } else if (routeName === 'FindPlaceStack') {
+    } else if (routeName === 'FindPlace') {
         iconName = 'map-search';
     }
 
     return <IconComponent name={iconName} size={30} color={tintColor} />
 }
 
-const FindPlaceStack = createStackNavigator(
-    {
-        FindPlace: {
-            screen: FindPlaceScreen,
-        },
-        PlaceDetail: {
-            screen: PlaceDetailScreen, 
-        }
-    }
-);
-
-const startMainTabs = createBottomTabNavigator(
+const tabStack = createBottomTabNavigator(
     {
         SharePlace: {
-            screen: SharePlaceScreen
+            screen: SharePlaceScreen,
         },
-        FindPlaceStack: {
-            screen: FindPlaceStack,
-            navigationOptions: {
-                title: 'Find Places',
-            }
+        FindPlace: {
+            screen: FindPlaceScreen
         }
     },
     {
         initialRouteName: 'SharePlace',
+        // backBehavior: 'history',
         defaultNavigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => getTabBarIcon(navigation, focused, tintColor),
         }),
@@ -52,6 +39,23 @@ const startMainTabs = createBottomTabNavigator(
             // activeTintColor: '#008000',
             // inactiveTintColor: 'gray'
         }
+    }
+);
+
+const startMainTabs = createStackNavigator(
+    {
+        Tabs: {
+            screen: tabStack,
+            navigationOptions: {
+                header: null
+            }
+        },
+        PlaceDetail: {
+            screen: PlaceDetailScreen, 
+        }
+    },
+    {
+        initialRouteName: 'Tabs',
     }
 );
 

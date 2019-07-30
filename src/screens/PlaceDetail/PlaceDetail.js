@@ -1,28 +1,35 @@
 import React, { Component} from "react";
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
+import { deletePlace } from '../../store/actions/index';
 
 class placeDetailScreen extends Component {
+    selectedPlace = this.props.navigation.getParam('selectedPlace');
     static navigationOptions = ({navigation}) => {
         let selectedPlace = navigation.getParam('selectedPlace');
-        name = selectedPlace ?  selectedPlace.name : 'Find Place';
+        name = selectedPlace ? selectedPlace.name : 'Find Place';
         return {
             title: name
         }
     }
     
+    placeDeletedHandler = () => {
+        this.props.onPlaceDeleted(this.selectedPlace.key);
+        this.props.navigation.goBack(null);
+    }
     render() {
-        selectedPlace = this.props.navigation.getParam('selectedPlace');
+        
         return (
             <View style={styles.modalContainer} >
                 <View>
                     <Image 
-                        source={selectedPlace.image} 
+                        source={this.selectedPlace.image} 
                         style={styles.placeImage}
                     />
                 </View>
                 <View>
-                    <TouchableOpacity onPress={this.props.onPlaceDeleted}>
+                    <TouchableOpacity onPress={() => this.placeDeletedHandler()}>
                         <View style={styles.deleteButton}>
                             <Ionicons 
                                 name="ios-trash" 
@@ -57,5 +64,11 @@ const styles = StyleSheet.create({
 
 });
 
-export default placeDetailScreen;
+const mapDispatchToState = dispatch => {
+    return {
+        onPlaceDeleted: placeKey => dispatch(deletePlace(placeKey))
+    }
+}
+
+export default connect(null, mapDispatchToState)(placeDetailScreen);
 

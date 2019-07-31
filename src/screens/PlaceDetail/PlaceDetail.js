@@ -47,7 +47,7 @@ class placeDetailScreen extends Component {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        margin: 22
+        margin: 5
     },
     placeImage: {
         width: "100%",

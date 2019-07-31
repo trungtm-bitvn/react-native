@@ -7,9 +7,9 @@ import PlaceList from '../../components/PlaceList/PlaceList';
 import { connect } from 'react-redux';
 
 class FindPlaceScreen extends Component {
-    static navigationOptions = {
-        title: 'Find Places',
-    }
+    // static navigationOptions = {
+    //     title: 'Find Places',
+    // }
     placeSelectedHandler = key => {
         selPlace = this.props.places.find(place => {
             return place.key === key;

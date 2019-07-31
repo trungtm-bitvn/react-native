@@ -10,9 +10,10 @@ import { addPlace } from '../../store/actions/index';
 
 
 class SharePlaceScreen extends Component {
-    static navigationOptions = {
-        title: 'Share Places',
-    }
+    // static navigationOptions = {
+    //     title: 'Share Places',
+    //     header: null
+    // }
 
     placeAddedHandler = (placeName) => {
         this.props.onPlaceAdded(placeName);

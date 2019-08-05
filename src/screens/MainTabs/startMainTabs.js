@@ -24,15 +24,15 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
 
 const Tabs = createBottomTabNavigator(
     {
-        SharePlace: {
-            screen: SharePlaceScreen,
-        },
         FindPlace: {
             screen: FindPlaceScreen
+        },
+        SharePlace: {
+            screen: SharePlaceScreen,
         }
     },
     {
-        initialRouteName: 'SharePlace',
+        initialRouteName: 'FindPlace',
         // backBehavior: 'history',
         defaultNavigationOptions: ({navigation}) => ({
             tabBarIcon: ({focused, tintColor}) => getTabBarIcon(navigation, focused, tintColor),

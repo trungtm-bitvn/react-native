@@ -1,4 +1,4 @@
-import {ADD_PLACE, DELETE_PLACE } from '../actions/actionTypes';
+import {ADD_PLACE, DELETE_PLACE, LOGOUT } from '../actions/actionTypes';
 
 const initialState = {
     places: []
@@ -23,6 +23,10 @@ const reducer = (state = initialState, action) => {
                 places: state.places.filter(place => {
                     return place.key !== action.placeKey;
                 })
+            };
+        case LOGOUT:
+            return {
+                places: []
             };
         default:
             return state;

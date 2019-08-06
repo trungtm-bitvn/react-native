@@ -1,5 +1,5 @@
 import React, { Component} from "react";
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity, Platform } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import { deletePlace } from '../../store/actions/index';
@@ -32,7 +32,7 @@ class placeDetailScreen extends Component {
                     <TouchableOpacity onPress={() => this.placeDeletedHandler()}>
                         <View style={styles.deleteButton}>
                             <Ionicons 
-                                name="ios-trash" 
+                                name={Platform.OS === "android" ? "md-trash" : "ios-trash"} 
                                 size={32} 
                                 color="red" 
                             />

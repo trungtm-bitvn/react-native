@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
 import { logout } from '../../store/actions/index'
@@ -18,7 +18,7 @@ class Drawer extends Component {
             <View style={styles.findPlaceContainer}>
                 <TouchableOpacity onPress={this.logout}>
                     <View style={styles.drawerItem}>
-                        <MaterialCommunityIcons name="logout-variant" size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <Ionicons name={Platform.OS === "android" ? "md-log-out" : "ios-log-out"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
                         <Text>Sign Out</Text>
                     </View>
                 </TouchableOpacity>

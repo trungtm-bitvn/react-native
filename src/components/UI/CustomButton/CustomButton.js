@@ -1,13 +1,25 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, TouchableHighlight, View, Text, StyleSheet, Platform } from "react-native";
 
-const customButton = props => (
-  <TouchableOpacity onPress={props.onPress} activeOpacity={.9}>
+const customButton = props => {
+  content = (
     <View style={[styles.button, {backgroundColor: props.color}]}>
       <Text style={styles.text}>{props.children}</Text>
     </View>
-  </TouchableOpacity>
-);
+  );
+  if (Platform.OS === "android") {
+    return (
+      <TouchableHighlight onPress={props.onPress}>
+        {content}
+      </TouchableHighlight>
+    );
+  }
+  return (
+    <TouchableOpacity onPress={props.onPress} activeOpacity={.9}>
+      {content}
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
     button: {

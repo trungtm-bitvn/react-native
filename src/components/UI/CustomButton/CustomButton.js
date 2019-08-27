@@ -3,10 +3,13 @@ import { TouchableOpacity, TouchableHighlight, View, Text, StyleSheet, Platform 
 
 const customButton = props => {
   content = (
-    <View style={[styles.button, {backgroundColor: props.color}]}>
-      <Text style={styles.text}>{props.children}</Text>
+    <View style={[styles.button, {backgroundColor: props.color}, props.disabled ? styles.invalid : null]}>
+      <Text style={[styles.text, props.disabled ? styles.invalidText: null]}>{props.children}</Text>
     </View>
   );
+  if(props.disabled) {
+    return content;
+  }
   if (Platform.OS === "android") {
     return (
       <TouchableHighlight onPress={props.onPress}>
@@ -31,6 +34,13 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontWeight: "700",
         textTransform: "uppercase"
+    },
+    invalid: {
+      backgroundColor: "#aaa",
+      borderColor: "#eee"
+    },
+    invalidText: {
+      color: "#eee"
     }
 });
 

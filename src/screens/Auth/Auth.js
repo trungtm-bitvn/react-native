@@ -1,61 +1,214 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ImageBackground, Dimensions } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback
+} from "react-native";
+import { connect } from "react-redux";
 
 import DefaultInput from "../../components/UI/DefaultInput/DefaultInput";
 import HeadingText from "../../components/UI/HeadingText/HeadingText";
 import MainText from "../../components/UI/MainText/MainText";
-import CustomButton from '../../components/UI/CustomButton/CustomButton'
-import backgroundImage from '../../../assets/logo.jpg';
-
+import CustomButton from "../../components/UI/CustomButton/CustomButton";
+import backgroundImage from "../../../assets/logo.jpg";
+import validation from "../../ultilities/validation";
+import { tryAuth } from "../../store/actions/index";
 
 class AuthScreen extends Component {
-  getDeviceDims = dims => dims.height > 500 ? 'portrait' : 'landscape'
-  
+  getDeviceDims = dims => (dims.height > 500 ? "portrait" : "landscape");
+
   state = {
-    deviceDims: this.getDeviceDims(Dimensions.get('window'))
-  }
+    deviceDims: this.getDeviceDims(Dimensions.get("window")),
+    authMode: "login",
+    controls: {
+      email: {
+        value: "",
+        valid: false,
+        validationRules: {
+          isEmail: true
+        },
+        touched: false
+      },
+      password: {
+        value: "",
+        valid: false,
+        validationRules: {
+          minLength: 6
+        },
+        touched: false
+      },
+      retypePassword: {
+        value: "",
+        valid: false,
+        validationRules: {
+          equalTo: "password"
+        },
+        touched: false
+      }
+    }
+  };
   constructor(props) {
     super(props);
-    Dimensions.addEventListener('change', this.deviceRotateHandler);
+    Dimensions.addEventListener("change", this.deviceRotateHandler);
   }
+
+  onLoginHandler = () => {
+    authData = {
+      email: this.state.controls.email.value,
+      password: this.state.controls.password.value
+    };
+    this.props.onLogin(authData);
+    this.props.navigation.navigate("Main");
+  };
+
+  switchAuthModeHandler = () => {
+    this.setState(prevState => {
+      return {
+        authMode: prevState.authMode === "login" ? "signup" : "login"
+      };
+    });
+  };
 
   deviceRotateHandler = dims => {
     this.setState({
       deviceDims: this.getDeviceDims(dims.window)
     });
-  }
+  };
 
-  
+  updateTextInput = (key, value) => {
+    let connectedValue = {};
+    if (this.state.controls[key].validationRules.equalTo) {
+      equalKey = this.state.controls[key].validationRules.equalTo;
+      equalValue = this.state.controls[equalKey].value;
+      connectedValue = {
+        ...connectedValue,
+        equalTo: equalValue
+      };
+    }
+
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          [key]: {
+            ...prevState.controls[key],
+            value: value,
+            valid: validation(
+              value,
+              prevState.controls[key].validationRules,
+              connectedValue
+            ),
+            touched: true
+          }
+        }
+      };
+    });
+  };
   render() {
-    headingContent = null
-    if(this.state.deviceDims === "portrait") {
+    let headingContent = null;
+    let retypePasswordContent = null;
+    if (this.state.deviceDims === "portrait") {
       headingContent = (
-      <MainText>
-        <HeadingText>Please Log In</HeadingText>
-      </MainText>
+        <MainText>
+          <HeadingText>
+            Please {this.state.authMode === "login" ? "Log In" : "Sign Up"}
+          </HeadingText>
+        </MainText>
+      );
+    }
+    if (this.state.authMode === "signup") {
+      retypePasswordContent = (
+        <View
+          style={
+            this.state.deviceDims === "portrait"
+              ? styles.portraitPasswordInput
+              : styles.landscapePasswordInput
+          }
+        >
+          <DefaultInput
+            placeholder="Confirm Password"
+            style={styles.input}
+            value={this.state.controls.retypePassword.value}
+            onChangeText={val => this.updateTextInput("retypePassword", val)}
+            valid={this.state.controls.retypePassword.valid}
+            touched={this.state.controls.retypePassword.touched}
+            autoCapitalize="none"
+            secureTextEntry
+          />
+        </View>
       );
     }
     return (
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-        <View style={styles.authContainer}>
+        <KeyboardAvoidingView style={styles.authContainer} behavior="padding">
           {headingContent}
-          <CustomButton onPress={() => {alert('sss')}} color="#9c4dcc">Switch to Login</CustomButton>
-          <View style={styles.inputContainer}>
-            <DefaultInput
-              placeholder="Your Email Address"
-              style={styles.input}
-            />
-            <View style={this.state.deviceDims === "portrait" ? styles.portraitPasswordContainer : styles.landscapePasswordContainer}>
-              <View style={this.state.deviceDims === "portrait" ? styles.portraitPasswordInput : styles.landscapePasswordInput}>
-                <DefaultInput placeholder="Password" style={styles.input} />
-              </View>
-              <View style={this.state.deviceDims === "portrait" ? styles.portraitPasswordInput : styles.landscapePasswordInput}>
-                <DefaultInput placeholder="Confirm Password" style={styles.input} />
+          <CustomButton onPress={this.switchAuthModeHandler} color="#9c4dcc">
+            Switch to {this.state.authMode === "login" ? "Sign Up" : "Log In"}
+          </CustomButton>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.keyboardDismissContainer}>
+              <View style={styles.inputContainer}>
+                <DefaultInput
+                  placeholder="Your Email Address"
+                  style={styles.input}
+                  value={this.state.controls.email.value}
+                  onChangeText={val => this.updateTextInput("email", val)}
+                  valid={this.state.controls.email.valid}
+                  touched={this.state.controls.email.touched}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                />
+                <View
+                  style={
+                    this.state.deviceDims === "portrait"
+                      ? styles.portraitPasswordContainer
+                      : styles.landscapePasswordContainer
+                  }
+                >
+                  <View
+                    style={
+                      this.state.deviceDims === "portrait" ||
+                      this.state.authMode === "login"
+                        ? styles.portraitPasswordInput
+                        : styles.landscapePasswordInput
+                    }
+                  >
+                    <DefaultInput
+                      placeholder="Password"
+                      style={styles.input}
+                      value={this.state.controls.password.value}
+                      onChangeText={val =>
+                        this.updateTextInput("password", val)
+                      }
+                      valid={this.state.controls.password.valid}
+                      touched={this.state.controls.password.touched}
+                      autoCapitalize="none"
+                      secureTextEntry
+                    />
+                  </View>
+                  {retypePasswordContent}
+                </View>
               </View>
             </View>
-          </View>
-          <CustomButton onPress={() => {this.props.navigation.navigate('Main')}} color="#9c4dcc">Submit</CustomButton>
-        </View>
+          </TouchableWithoutFeedback>
+          <CustomButton
+            onPress={() => this.onLoginHandler()}
+            color="#9c4dcc"
+            disabled={
+              !this.state.controls.email.valid ||
+              !this.state.controls.password.valid ||
+              (!this.state.controls.retypePassword.valid &&
+                this.state.authMode === "signup")
+            }
+          >
+            Submit
+          </CustomButton>
+        </KeyboardAvoidingView>
       </ImageBackground>
     );
   }
@@ -67,18 +220,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  keyboardDismissContainer: {
+    width: "100%",
+    alignItems: "center"
+  },
   inputContainer: {
     width: "80%"
   },
   input: {
     backgroundColor: "#eee",
     borderColor: "#bbb"
-  }, 
+  },
   backgroundImage: {
-      flex: 1,
-      width: "100%",
-      
-  }, 
+    flex: 1,
+    width: "100%"
+  },
   portraitPasswordContainer: {
     flexDirection: "column",
     justifyContent: "flex-start"
@@ -94,4 +250,13 @@ const styles = StyleSheet.create({
     width: "45%"
   }
 });
-export default AuthScreen;
+
+mapDispatchToProps = dispatch => {
+  return {
+    onLogin: authData => dispatch(tryAuth(authData))
+  };
+};
+export default connect(
+  null,
+  mapDispatchToProps
+)(AuthScreen);

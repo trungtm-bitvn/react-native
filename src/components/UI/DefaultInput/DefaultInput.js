@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     padding: 5,
     marginTop: 8,
-    marginLeft: 8
+    marginLeft: 0
   },
   invalid: {
     backgroundColor: "#ffcdd2",

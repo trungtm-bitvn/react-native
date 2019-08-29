@@ -1,4 +1,4 @@
-import {ADD_PLACE, DELETE_PLACE, LOGOUT } from '../actions/actionTypes';
+import { ADD_PLACE, DELETE_PLACE, LOGOUT } from '../actions/actionTypes';
 
 const initialState = {
     places: []
@@ -12,6 +12,7 @@ const reducer = (state = initialState, action) => {
                 places: state.places.concat({
                     key: Math.random().toString(),
                     name: action.placeName,
+                    location: action.location,
                     image: {
                         uri: "https://upload.wikimedia.org/wikipedia/commons/6/62/Paracas_National_Reserve%2C_Ica%2C_Peru-3April2011.jpg"
                     }

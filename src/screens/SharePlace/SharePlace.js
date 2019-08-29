@@ -25,6 +25,10 @@ class SharePlaceScreen extends Component {
         validationRules: {
           notEmpty: true
         }
+      },
+      location: {
+        val: null,
+        valid: false
       }
     }
   };
@@ -45,12 +49,41 @@ class SharePlaceScreen extends Component {
   };
 
   placeAddedHandler = () => {
-    if (this.state.controls.placeName.val.trim() !== "") {
-      this.props.onPlaceAdded(this.state.controls.placeName.val);
-      this.setState({
-        placeName: ""
-      });
-    }
+    this.props.onPlaceAdded(this.state.controls.placeName.val, this.state.controls.location.val);
+    // this.resetSharePlace();
+  };
+
+  resetSharePlace = () => {
+    this.setState({
+      controls: {
+        placeName: {
+          val: "",
+          valid: false,
+          touched: false,
+          validationRules: {
+            notEmpty: true
+          }
+        },
+        location: {
+          val: null,
+          valid: false
+        }
+      }
+    });
+  }
+
+  locationPickHandler = location => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          location: {
+            val: location,
+            valid: true
+          }
+        }
+      };
+    });
   };
 
   render() {
@@ -69,9 +102,20 @@ class SharePlaceScreen extends Component {
             />
           </View>
           <PickImage />
-          <PickLocation style={styles.location} />
+          <PickLocation
+            style={styles.location}
+            onLocationPick={this.locationPickHandler}
+          />
           <View style={styles.button}>
-            <Button title="Share the Place!" onPress={this.placeAddedHandler} />
+            <Button
+              title="Share the Place!"
+              onPress={this.placeAddedHandler}
+              disabled={
+                (!this.state.controls.placeName.valid &&
+                  this.state.controls.placeName.touched) ||
+                !this.state.controls.location.valid
+              }
+            />
           </View>
         </View>
       </ScrollView>
@@ -91,7 +135,7 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
     width: "90%"
-  }, 
+  },
   location: {
     width: "100%"
   }
@@ -99,7 +143,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlaceAdded: placeName => dispatch(addPlace(placeName))
+    onPlaceAdded: (placeName, location) => dispatch(addPlace(placeName, location))
   };
 };
 

@@ -19,20 +19,26 @@ class PickLocation extends Component {
 
   pickLocationHandler = event => {
     const coords = event.nativeEvent.coordinate;
-    this.map.animateToRegion({
-      ...this.state.focusedLocation,
+    const newLocation = {
       latitude: coords.latitude,
       longitude: coords.longitude
+    }
+    this.map.animateToRegion({
+      ...this.state.focusedLocation,
+      ...newLocation
     });
     this.setState(prevState => {
       return {
         focusedLocation: {
           ...prevState.focusedLocation,
-          latitude: coords.latitude,
-          longitude: coords.longitude
+          ...newLocation
         },
         locationChosen: true
       };
+    });
+    this.props.onLocationPick({
+      ...this.state.focusedLocation,
+      ...newLocation
     });
   };
 
@@ -53,8 +59,6 @@ class PickLocation extends Component {
             }
           }
         };
-        console.log(pos);
-        console.log(coordsEvent);
         this.pickLocationHandler(coordsEvent);
       },
       err => {

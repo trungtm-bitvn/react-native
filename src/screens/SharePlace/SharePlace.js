@@ -49,7 +49,11 @@ class SharePlaceScreen extends Component {
   };
 
   placeAddedHandler = () => {
-    this.props.onPlaceAdded(this.state.controls.placeName.val, this.state.controls.location.val);
+    this.props.onPlaceAdded(
+      this.state.controls.placeName.val,
+      this.state.controls.location.val,
+      this.state.controls.image.val
+    );
     // this.resetSharePlace();
   };
 
@@ -67,10 +71,14 @@ class SharePlaceScreen extends Component {
         location: {
           val: null,
           valid: false
+        },
+        image: {
+          val: null,
+          valid: false
         }
       }
     });
-  }
+  };
 
   locationPickHandler = location => {
     this.setState(prevState => {
@@ -79,6 +87,20 @@ class SharePlaceScreen extends Component {
           ...prevState.controls,
           location: {
             val: location,
+            valid: true
+          }
+        }
+      };
+    });
+  };
+
+  imagePickHandler = image => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          image: {
+            val: image,
             valid: true
           }
         }
@@ -101,7 +123,7 @@ class SharePlaceScreen extends Component {
               valid={this.state.controls.placeName.valid}
             />
           </View>
-          <PickImage />
+          <PickImage onImagePick={this.imagePickHandler} />
           <PickLocation
             style={styles.location}
             onLocationPick={this.locationPickHandler}
@@ -113,7 +135,8 @@ class SharePlaceScreen extends Component {
               disabled={
                 (!this.state.controls.placeName.valid &&
                   this.state.controls.placeName.touched) ||
-                !this.state.controls.location.valid
+                !this.state.controls.location.valid ||
+                !this.state.controls.image.valid
               }
             />
           </View>
@@ -143,7 +166,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onPlaceAdded: (placeName, location) => dispatch(addPlace(placeName, location))
+    onPlaceAdded: (placeName, location, image) =>
+      dispatch(addPlace(placeName, location, image))
   };
 };
 

@@ -25,7 +25,7 @@ class PickImage extends Component {
         pickedImage: {
           uri: result.uri
         }
-      })
+      });
     }
   };
   render() {

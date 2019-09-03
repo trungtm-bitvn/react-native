@@ -19,14 +19,34 @@ class PickImage extends Component {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All
     });
-    console.log(result);
     if (result && !result.cancelled) {
-      this.setState({
-        pickedImage: {
-          uri: result.uri
-        }
-      });
+      this.setImage(result.uri);
     }
+  };
+
+  takeImageHandler = async () => {
+    let { status } = await Permissions.askAsync(Permissions.CAMERA);
+    if (status !== "granted") {
+      alert("We dont have permission to access Image Library");
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All
+    });
+
+    if (result && !result.cancelled) {
+      this.setImage(result.uri);
+    }
+  };
+
+  setImage = uri => {
+    this.setState({
+      pickedImage: {
+        uri: uri
+      }
+    });
+    this.props.onImagePick({uri: uri});
   };
   render() {
     return (
@@ -35,7 +55,7 @@ class PickImage extends Component {
           <Image source={this.state.pickedImage} style={styles.previewImage} />
         </View>
         <View style={styles.button}>
-          <Button title="Take Image" onPress={this.pickImageHandler} />
+          <Button title="Take Image" onPress={this.takeImageHandler} />
           <Button title="Pick Image" onPress={this.pickImageHandler} />
         </View>
       </View>

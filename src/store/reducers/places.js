@@ -13,9 +13,7 @@ const reducer = (state = initialState, action) => {
                     key: Math.random().toString(),
                     name: action.placeName,
                     location: action.location,
-                    image: {
-                        uri: "https://upload.wikimedia.org/wikipedia/commons/6/62/Paracas_National_Reserve%2C_Ica%2C_Peru-3April2011.jpg"
-                    }
+                    image: action.image
                 })
             };
         case DELETE_PLACE:

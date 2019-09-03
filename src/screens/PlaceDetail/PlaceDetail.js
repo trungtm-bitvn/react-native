@@ -27,6 +27,7 @@ class placeDetailScreen extends Component {
     this.props.navigation.goBack(null);
   };
   render() {
+    console.log(this.selectedPlace);
     return (
       <ScrollView>
         <View style={styles.modalContainer}>

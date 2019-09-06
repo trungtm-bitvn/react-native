@@ -29,9 +29,14 @@ class SharePlaceScreen extends Component {
       location: {
         val: null,
         valid: false
+      },
+      image: {
+        val: null,
+        valid: false
       }
     }
   };
+  
   placeNameChangedHandler = val => {
     this.setState(prevState => {
       return {
@@ -42,6 +47,34 @@ class SharePlaceScreen extends Component {
             val: val,
             touched: true,
             valid: validate(val, prevState.controls.placeName.validationRules)
+          }
+        }
+      };
+    });
+  };
+
+  locationPickHandler = location => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          location: {
+            val: location,
+            valid: true
+          }
+        }
+      };
+    });
+  };
+
+  imagePickHandler = image => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          image: {
+            val: image,
+            valid: true
           }
         }
       };
@@ -80,34 +113,6 @@ class SharePlaceScreen extends Component {
     });
   };
 
-  locationPickHandler = location => {
-    this.setState(prevState => {
-      return {
-        controls: {
-          ...prevState.controls,
-          location: {
-            val: location,
-            valid: true
-          }
-        }
-      };
-    });
-  };
-
-  imagePickHandler = image => {
-    this.setState(prevState => {
-      return {
-        controls: {
-          ...prevState.controls,
-          image: {
-            val: image,
-            valid: true
-          }
-        }
-      };
-    });
-  };
-
   render() {
     return (
       <ScrollView>
@@ -133,8 +138,7 @@ class SharePlaceScreen extends Component {
               title="Share the Place!"
               onPress={this.placeAddedHandler}
               disabled={
-                (!this.state.controls.placeName.valid &&
-                  this.state.controls.placeName.touched) ||
+                !this.state.controls.placeName.valid ||
                 !this.state.controls.location.valid ||
                 !this.state.controls.image.valid
               }

@@ -65,9 +65,17 @@ class Drawer extends Component {
         );
     }
 
-    // componentDidMount() {
-    //     this.getExpoToken();
-    // }
+    componentDidMount() {
+        // this.getExpoToken();
+        if (Platform.OS === 'android') {
+            Notifications.createChannelAndroidAsync('test-notification', {
+              name: 'Test Notification',
+              sound: true,
+              priority: 'max',
+              vibrate: [0, 250, 250, 250],
+            });
+          }
+    }
     
 }
 

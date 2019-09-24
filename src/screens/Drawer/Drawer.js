@@ -1,64 +1,43 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Badge, withBadge } from "react-native-elements";
 
 import { connect } from 'react-redux';
-import { logout } from '../../store/actions/index'
+import { logout } from '../../store/actions/index';
+
 
 import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
 
 class Drawer extends Component {
     static navigationOptions = {
         title: 'Find Places',
     }
 
-    // getExpoToken = async () => {
-    //     const { status: existingStatus } = await Permissions.getAsync(
-    //         Permissions.NOTIFICATIONS
-    //     );
-    //     let finalStatus = existingStatus;
-
-    //     // only ask if permissions have not already been determined, because
-    //     // iOS won't necessarily prompt the user a second time.
-    //     if (existingStatus !== "granted") {
-    //         // Android remote notification permissions are granted during the app
-    //         // install, so this will only ask on iOS
-    //         const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    //         finalStatus = status;
-    //     }
-
-    //     // Stop here if the user did not grant permissions
-    //     if (finalStatus !== "granted") {
-    //         return;
-    //     }
-
-    //     // Get the token that uniquely identifies this device
-    //     let token = await Notifications.getExpoPushTokenAsync();
-
-    //     return fetch("https://reactnativelearning-50c20.firebaseio.com/token.json", {
-    //         method: 'POST',
-    //         body: JSON.stringify({
-    //             token: {
-    //                 value: token,
-    //             },
-    //             user: {
-    //                 username: 'Brent',
-    //             },
-    //         }),
-    //     });
-    // };
     logout = () => {
         this.props.logoutHandler();
         this.props.navigation.navigate('Auth');
     }
     render() {
+        const BadgedIcon = withBadge('99+', {right: -2, top: -4})(Ionicons)
         return (
             <View style={styles.findPlaceContainer}>
                 <TouchableOpacity onPress={this.logout}>
                     <View style={styles.drawerItem}>
-                        <Ionicons name={Platform.OS === "android" ? "md-log-out" : "ios-log-out"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <BadgedIcon name={Platform.OS === "android" ? "md-log-out" : "ios-log-out"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
                         <Text>Sign Out</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.logout}>
+                    <View style={styles.drawerItem}>
+                        <Ionicons name={Platform.OS === "android" ? "md-chatboxes" : "ios-chatboxes"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <Text>Message</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.logout}>
+                    <View style={styles.drawerItem}>
+                        <Ionicons name={Platform.OS === "android" ? "md-airplane" : "ios-airplane"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <Text>Plan</Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -66,7 +45,6 @@ class Drawer extends Component {
     }
 
     componentDidMount() {
-        // this.getExpoToken();
         if (Platform.OS === 'android') {
             Notifications.createChannelAndroidAsync('test-notification', {
               name: 'Test Notification',
@@ -74,7 +52,7 @@ class Drawer extends Component {
               priority: 'max',
               vibrate: [0, 250, 250, 250],
             });
-          }
+        }
     }
     
 }

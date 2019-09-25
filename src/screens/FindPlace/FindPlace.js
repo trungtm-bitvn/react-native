@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Button, AsyncStorag
 
 import PlaceList from '../../components/PlaceList/PlaceList';
 import { connect } from 'react-redux';
+import { storeNotification } from '../../store/actions/index';
 
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
@@ -34,6 +35,10 @@ class FindPlaceScreen extends Component {
                 isShowList: true
             });
         });
+    }
+
+    getNoti = async () => {
+        this.props.getNotificationHandler();
     }
 
     getExpoToken = async () => {
@@ -67,7 +72,7 @@ class FindPlaceScreen extends Component {
             requestHeaders.set('Content-Type', 'multipart/form-data');
             requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=' );
             let response = await fetch(
-                'http://3343c1ae.ngrok.io/api/craftsmen/index', {
+                'http://72d220f2.ngrok.io/api/craftsmen/index', {
                     method: 'POST',
                     headers: requestHeaders,
                     body: formData,
@@ -78,6 +83,7 @@ class FindPlaceScreen extends Component {
                 // console.log('trueです')
                 await AsyncStorage.setItem('key', responseJson.user.key);
             }
+            console.log('ssss');
             console.log(responseJson);
         } catch (error) {
             console.error('FALSE' + error);
@@ -113,6 +119,7 @@ class FindPlaceScreen extends Component {
                             </TouchableOpacity>
                     </Animated.View>
                     <Button title="Push Token" onPress={this.getExpoToken} />
+                    <Button title="Get noti" onPress={this.getNoti} />
                 </View>
                 
             )
@@ -151,4 +158,10 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps)(FindPlaceScreen);
+const mapDispatchToProps = dispatch => {
+    return {
+        getNotificationHandler: () => dispatch(storeNotification())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FindPlaceScreen);

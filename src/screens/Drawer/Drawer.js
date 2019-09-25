@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Badge, withBadge } from "react-native-elements";
 
 import { connect } from 'react-redux';
-import { logout } from '../../store/actions/index';
+import { logout, storeNotification } from '../../store/actions/index';
 
 
 import { Notifications } from "expo";
@@ -19,7 +19,9 @@ class Drawer extends Component {
         this.props.navigation.navigate('Auth');
     }
     render() {
-        const BadgedIcon = withBadge('99+', {right: -2, top: -4})(Ionicons)
+        console.log('state redux');
+        console.log(this.props.notifications);
+        const BadgedIcon = withBadge(1, {right: -2, top: -4})(Ionicons)
         return (
             <View style={styles.findPlaceContainer}>
                 <TouchableOpacity onPress={this.logout}>
@@ -78,4 +80,10 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(Drawer);
+const mapStateToProps = state => {
+    return {
+        notifications: state.notifications.notifications
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Drawer);

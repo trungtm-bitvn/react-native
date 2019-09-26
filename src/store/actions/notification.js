@@ -3,28 +3,25 @@ import  { AsyncStorage } from 'react-native';
 
 export const storeNotification = () => {
     return async dispatch => {
-        try {
-            const userToken = await AsyncStorage.getItem('key');
-            console.log(userToken);
-            let requestHeaders = new Headers();
-            requestHeaders.set("X-API-KEY", userToken);
-            requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=' );
-            let response = await fetch(
-                'http://72d220f2.ngrok.io/api/sites/get_notification', {
-                    method: 'POST',
-                    headers: requestHeaders,
-                }
-            );
-            let responseJson = await response.json();
-            console.log('response notification')
-            console.log(responseJson.noti);
-
-            return {
-                type: STORE_NOTI_INFO, 
-                notifications: responseJson.noti
+        const userToken = await AsyncStorage.getItem('key');
+        console.log(userToken);
+        let requestHeaders = new Headers();
+        requestHeaders.set("X-API-KEY", userToken);
+        requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=' );
+        fetch(
+            'http://53e1a96d.ngrok.io/api/sites/get_notification', {
+                method: 'POST',
+                headers: requestHeaders,
             }
-        } catch (error) {
-            console.error('FALSE' + error);
-        }
+        )
+        .then(res => res.json())
+        .then(parsedRes => {
+            console.log('response notification')
+            console.log(parsedRes.noti);
+            dispatch({
+                type: STORE_NOTI_INFO, 
+                notifications: parsedRes.noti
+            })
+        });
     };
 }

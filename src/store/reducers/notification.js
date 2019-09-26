@@ -9,6 +9,8 @@ const initialState = {
 }
 
 const reducer = (state = initialState, action) => {
+    console.log('check action');
+    console.log(action);
     switch (action.type) {
         case STORE_NOTI_INFO:
             console.log('action log');

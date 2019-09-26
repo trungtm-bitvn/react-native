@@ -21,7 +21,7 @@ class Drawer extends Component {
     render() {
         console.log('state redux');
         console.log(this.props.notifications);
-        const BadgedIcon = withBadge(1, {right: -2, top: -4})(Ionicons)
+        const BadgedIcon = withBadge(this.props.notifications.total? this.props.notifications.total : null, {right: -2, top: -4})(Ionicons)
         return (
             <View style={styles.findPlaceContainer}>
                 <TouchableOpacity onPress={this.logout}>

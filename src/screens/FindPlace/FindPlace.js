@@ -72,7 +72,7 @@ class FindPlaceScreen extends Component {
             requestHeaders.set('Content-Type', 'multipart/form-data');
             requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=' );
             let response = await fetch(
-                'http://72d220f2.ngrok.io/api/craftsmen/index', {
+                'http://53e1a96d.ngrok.io/api/craftsmen/index', {
                     method: 'POST',
                     headers: requestHeaders,
                     body: formData,

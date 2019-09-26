@@ -31,9 +31,6 @@ const AppContainer = createAppContainer(AppNavigator);
 
 const store = configureStore();
 
-const getNotifications = async () => {
-  
-}
 
 export default class App extends Component {
   render() {

@@ -3,15 +3,57 @@ import {
   createStackNavigator,
   createDrawerNavigator
 } from "react-navigation";
-import React from "react";
-import { TouchableOpacity, Platform } from "react-native";
+import React, { Component } from "react";
+import { TouchableOpacity, Platform, View, StyleSheet } from "react-native";
 
 import SharePlaceScreen from "../SharePlace/SharePlace";
 import FindPlaceScreen from "../FindPlace/FindPlace";
 import PlaceDetailScreen from "../PlaceDetail/PlaceDetail";
 import DrawerScreen from "../Drawer/Drawer";
 
+import { connect } from 'react-redux';
+import { clearNotification } from '../../store/actions/index';
+
 import { Ionicons } from "@expo/vector-icons";
+import { Badge } from "react-native-elements";
+
+class MenuButton extends Component {
+  render() {
+    notification = this.props.notifications.total ? <Badge status="error" containerStyle={{ position: 'absolute', top: 2, left: 20 }}/> : null;
+    return (
+      <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.openDrawer();
+              this.props.clearNotificationHandler('total');
+            }}
+          >
+            <View style={styles.drawerItemIcon}>
+              <Ionicons
+                name={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+                size={30}
+                color="black"
+                style={styles.menuButton}
+              />
+              {notification}
+            </View>
+            
+      </TouchableOpacity>
+    );
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+      notifications: state.notifications.notifications
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+      clearNotificationHandler: key => dispatch(clearNotification(key))
+  }
+}
+let MenuButtonContainer = connect(mapStateToProps, mapDispatchToProps)(MenuButton);
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -50,6 +92,7 @@ const Tabs = createBottomTabNavigator(
   }
 );
 
+
 const Stacks = createStackNavigator(
   {
     Tabs: {
@@ -64,17 +107,7 @@ const Stacks = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => {
       return {
         headerRight: (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          >
-            <Ionicons
-              name={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-              size={30}
-              color="black"
-            />
-          </TouchableOpacity>
+          <MenuButtonContainer navigation={navigation}/>
         ),
         title: "Tabs Navigation"
       };
@@ -93,5 +126,14 @@ const startMainTabs = createDrawerNavigator(
     drawerPosition: "right"
   }
 );
+const styles = StyleSheet.create({
+  menuButton: {
+    marginRight: 15
+  },
+  drawerItemIcon: {
+    flexDirection: "row"
+}
+});
+
 
 export default startMainTabs;

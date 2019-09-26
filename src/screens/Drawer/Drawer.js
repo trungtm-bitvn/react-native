@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Badge, withBadge } from "react-native-elements";
+import { Badge } from "react-native-elements";
 
 import { connect } from 'react-redux';
-import { logout, storeNotification } from '../../store/actions/index';
+import { logout, clearNotification } from '../../store/actions/index';
 
 
 import { Notifications } from "expo";
@@ -21,24 +21,39 @@ class Drawer extends Component {
     render() {
         console.log('state redux');
         console.log(this.props.notifications);
-        const BadgedIcon = withBadge(this.props.notifications.total? this.props.notifications.total : null, {right: -2, top: -4})(Ionicons)
+        let chatCount = null;
+        let planCount = null;
+        if(this.props.notifications.chat) {
+            chatCount = <Badge value={this.props.notifications.chat} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
+        }
+        if(this.props.notifications.plan) {
+            planCount = <Badge value={this.props.notifications.plan} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
+        }
         return (
             <View style={styles.findPlaceContainer}>
                 <TouchableOpacity onPress={this.logout}>
                     <View style={styles.drawerItem}>
-                        <BadgedIcon name={Platform.OS === "android" ? "md-log-out" : "ios-log-out"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <View style={styles.drawerItemIcon}>
+                            <Ionicons name={Platform.OS === "android" ? "md-log-out" : "ios-log-out"} size={30} color="#aaa"/>
+                        </View>
                         <Text>Sign Out</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.logout}>
+                <TouchableOpacity onPress={() => this.props.clearNotificationHandler('chat')}>
                     <View style={styles.drawerItem}>
-                        <Ionicons name={Platform.OS === "android" ? "md-chatboxes" : "ios-chatboxes"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <View style={styles.drawerItemIcon}>
+                            <Ionicons name={Platform.OS === "android" ? "md-chatboxes" : "ios-chatboxes"} size={30} color="#aaa"/>
+                            {chatCount}
+                        </View>
                         <Text>Message</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.logout}>
+                <TouchableOpacity onPress={() => this.props.clearNotificationHandler('plan')}>
                     <View style={styles.drawerItem}>
-                        <Ionicons name={Platform.OS === "android" ? "md-airplane" : "ios-airplane"} size={30} color="#aaa" style={styles.drawerItemIcon}/>
+                        <View style={styles.drawerItemIcon}>
+                            <Ionicons name={Platform.OS === "android" ? "md-airplane" : "ios-airplane"} size={30} color="#aaa"/>
+                            {planCount}
+                        </View>
                         <Text>Plan</Text>
                     </View>
                 </TouchableOpacity>
@@ -70,19 +85,26 @@ const styles = StyleSheet.create({
         backgroundColor: "#eee"
     },
     drawerItemIcon: {
-        marginRight: 10
+        marginRight: 20,
+        flexDirection: "row",
+    },
+    badgeNumber: {
+        position: "absolute",
+        right: -4
     }
+
 });
 
 const mapDispatchToProps = dispatch => {
     return {
-        logoutHandler: () => dispatch(logout())
+        logoutHandler: () => dispatch(logout()),
+        clearNotificationHandler: key => dispatch(clearNotification(key))
     }
 }
 
 const mapStateToProps = state => {
     return {
-        notifications: state.notifications.notifications
+        notifications: state.notifications.notifications,
     }
 }
 

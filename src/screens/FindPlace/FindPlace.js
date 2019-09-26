@@ -4,11 +4,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Button, AsyncStorag
 
 
 import PlaceList from '../../components/PlaceList/PlaceList';
-import { connect } from 'react-redux';
-import { storeNotification } from '../../store/actions/index';
 
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
+import { connect } from 'react-redux';
+import { getNotification } from '../../store/actions/index';
 
 class FindPlaceScreen extends Component {
     state = {
@@ -41,66 +39,6 @@ class FindPlaceScreen extends Component {
         this.props.getNotificationHandler();
     }
 
-    getExpoToken = async () => {
-        const { status: existingStatus } = await Permissions.getAsync(
-            Permissions.NOTIFICATIONS
-        );
-        let finalStatus = existingStatus;
-
-        // only ask if permissions have not already been determined, because
-        // iOS won't necessarily prompt the user a second time.
-        if (existingStatus !== "granted") {
-            // Android remote notification permissions are granted during the app
-            // install, so this will only ask on iOS
-            const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-            finalStatus = status;
-        }
-
-        // Stop here if the user did not grant permissions
-        if (finalStatus !== "granted") {
-            return;
-        }
-
-        // Get the token that uniquely identifies this device
-        let token = await Notifications.getExpoPushTokenAsync();
-        let formData = new FormData();
-        formData.append('tel', '111');
-        formData.append('login_pass', '111');
-        formData.append('expo_push_token', token);
-        try {
-            let requestHeaders = new Headers();
-            requestHeaders.set('Content-Type', 'multipart/form-data');
-            requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=' );
-            let response = await fetch(
-                'http://53e1a96d.ngrok.io/api/craftsmen/index', {
-                    method: 'POST',
-                    headers: requestHeaders,
-                    body: formData,
-                }
-            );
-            let responseJson = await response.json();
-            if (responseJson.status) {
-                // console.log('trueです')
-                await AsyncStorage.setItem('key', responseJson.user.key);
-            }
-            console.log('ssss');
-            console.log(responseJson);
-        } catch (error) {
-            console.error('FALSE' + error);
-        }
-
-        // return fetch("https://reactnativelearning-50c20.firebaseio.com/token.json", {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         token: {
-        //             value: token,
-        //         },
-        //         user: {
-        //             username: 'Brent',
-        //         },
-        //     }),
-        // });
-    };
     render() {
         const scale = this.state.findPlaceAnim.interpolate({
             inputRange: [0, 1],
@@ -118,7 +56,6 @@ class FindPlaceScreen extends Component {
                                 <Text style={styles.findPlaceButton} >Find Places!</Text>
                             </TouchableOpacity>
                     </Animated.View>
-                    <Button title="Push Token" onPress={this.getExpoToken} />
                     <Button title="Get noti" onPress={this.getNoti} />
                 </View>
                 
@@ -160,7 +97,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        getNotificationHandler: () => dispatch(storeNotification())
+        getNotificationHandler: () => dispatch(getNotification())
     }
 }
 

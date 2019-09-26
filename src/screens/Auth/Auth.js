@@ -8,7 +8,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from "react-native";
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
+import { Notifications } from "expo";
 
 import DefaultInput from "../../components/UI/DefaultInput/DefaultInput";
 import HeadingText from "../../components/UI/HeadingText/HeadingText";
@@ -16,7 +17,7 @@ import MainText from "../../components/UI/MainText/MainText";
 import CustomButton from "../../components/UI/CustomButton/CustomButton";
 import backgroundImage from "../../../assets/logo.jpg";
 import validation from "../../ultilities/validation";
-import { tryAuth } from "../../store/actions/index";
+import { tryAuth, increaseNotificationByOne } from "../../store/actions/index";
 
 class AuthScreen extends Component {
   getDeviceDims = dims => (dims.height > 500 ? "portrait" : "landscape");
@@ -56,12 +57,19 @@ class AuthScreen extends Component {
     Dimensions.addEventListener("change", this.deviceRotateHandler);
   }
 
-  onLoginHandler = () => {
+  _handleNotification = (notification) => {
+    if('notificationType' in notification.data) {
+      notificationType = notification.data.notificationType
+      this.props.increaseNotification(notificationType);
+    }
+  };
+  onLoginHandler = async () => {
     authData = {
       email: this.state.controls.email.value,
       password: this.state.controls.password.value
     };
-    this.props.onLogin(authData);
+    await this.props.onLogin(authData);
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
     this.props.navigation.navigate("Main");
   };
 
@@ -253,9 +261,11 @@ const styles = StyleSheet.create({
 
 mapDispatchToProps = dispatch => {
   return {
-    onLogin: authData => dispatch(tryAuth(authData))
+    onLogin: authData => dispatch(tryAuth(authData)),
+    increaseNotification: key => dispatch(increaseNotificationByOne(key))
   };
 };
+
 export default connect(
   null,
   mapDispatchToProps

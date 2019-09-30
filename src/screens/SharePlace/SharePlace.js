@@ -112,11 +112,18 @@ class SharePlaceScreen extends Component {
       }
     });
   };
+  openModal = () => {
+    this.props.navigation.navigate("Modal");
+  }
 
   render() {
     return (
       <ScrollView>
         <View style={styles.container}>
+          <Button
+              title="Open Modal"
+              onPress={this.openModal}
+          />
           <MainText>
             <HeadingText>Share a place with us!</HeadingText>
           </MainText>

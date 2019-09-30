@@ -6,7 +6,8 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert
 } from "react-native";
 import { connect } from 'react-redux';
 import { Notifications } from "expo";
@@ -61,6 +62,8 @@ class AuthScreen extends Component {
     if('notificationType' in notification.data) {
       notificationType = notification.data.notificationType
       this.props.increaseNotification(notificationType);
+      console.log('notification data');
+      console.log(notification);
     }
   };
   onLoginHandler = async () => {

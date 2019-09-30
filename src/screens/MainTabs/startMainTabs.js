@@ -8,6 +8,7 @@ import { TouchableOpacity, Platform, View, StyleSheet } from "react-native";
 
 import SharePlaceScreen from "../SharePlace/SharePlace";
 import FindPlaceScreen from "../FindPlace/FindPlace";
+import ModalScreen from "../Modal/Modal";
 import PlaceDetailScreen from "../PlaceDetail/PlaceDetail";
 import DrawerScreen from "../Drawer/Drawer";
 
@@ -119,6 +120,9 @@ const startMainTabs = createDrawerNavigator(
   {
     Stacks: {
       screen: Stacks
+    }, 
+    Modal: {
+      screen: ModalScreen
     }
   },
   {

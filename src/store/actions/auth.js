@@ -36,7 +36,7 @@ export const tryAuth = authData => {
         requestHeaders.set('Content-Type', 'multipart/form-data');
         requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=');
         fetch(
-            'http://c6db1e9d.ngrok.io/api/craftsmen/index', {
+            'http://dbd83510.ngrok.io/api/craftsmen/index', {
                 method: 'POST',
                 headers: requestHeaders,
                 body: formData,
@@ -45,8 +45,8 @@ export const tryAuth = authData => {
         .then(res => res.json())
         .then(parsedRes => {
             console.log('ssss');
-            console.log(responseJson);
-            AsyncStorage.setItem('key', responseJson.user.key)
+            console.log(parsedRes);
+            AsyncStorage.setItem('key', parsedRes.user.key)
         })
         .then(
             dispatch(getNotification())

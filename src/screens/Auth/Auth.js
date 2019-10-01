@@ -7,7 +7,8 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Alert
+  Alert,
+  AppState
 } from "react-native";
 import { connect } from 'react-redux';
 import { Notifications } from "expo";
@@ -31,7 +32,6 @@ class AuthScreen extends Component {
         value: "",
         valid: false,
         validationRules: {
-          isEmail: true
         },
         touched: false
       },
@@ -39,7 +39,7 @@ class AuthScreen extends Component {
         value: "",
         valid: false,
         validationRules: {
-          minLength: 6
+          minLength: 3
         },
         touched: false
       },
@@ -64,6 +64,8 @@ class AuthScreen extends Component {
       this.props.increaseNotification(notificationType);
       console.log('notification data');
       console.log(notification);
+      console.log('App state');
+      console.log(AppState.currentState);
     }
   };
   onLoginHandler = async () => {

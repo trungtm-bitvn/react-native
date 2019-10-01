@@ -8,7 +8,7 @@ export const getNotification = () => {
     let requestHeaders = new Headers();
     requestHeaders.set("X-API-KEY", userToken);
     requestHeaders.set("Authorization", "Basic Yml0dm46Yml0dm4=");
-    fetch("http://dbd83510.ngrok.io/api/sites/get_notification", {
+    fetch("http://1db82c39.ngrok.io/api/sites/get_notification", {
       method: "POST",
       headers: requestHeaders
     })

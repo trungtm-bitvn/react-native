@@ -29,14 +29,14 @@ export const tryAuth = authData => {
         // Get the token that uniquely identifies this device
         let token = await Notifications.getExpoPushTokenAsync();
         let formData = new FormData();
-        formData.append('tel', '111');
-        formData.append('login_pass', '111');
+        formData.append('tel', authData.email);
+        formData.append('login_pass', authData.password);
         formData.append('expo_push_token', token);
         let requestHeaders = new Headers();
         requestHeaders.set('Content-Type', 'multipart/form-data');
         requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=');
         fetch(
-            'http://dbd83510.ngrok.io/api/craftsmen/index', {
+            'http://1db82c39.ngrok.io/api/craftsmen/index', {
                 method: 'POST',
                 headers: requestHeaders,
                 body: formData,
@@ -48,9 +48,6 @@ export const tryAuth = authData => {
             console.log(parsedRes);
             AsyncStorage.setItem('key', parsedRes.user.key)
         })
-        .then(
-            dispatch(getNotification())
-        )
         .catch(err => console.log('FALSE ' + err))
     };
 }

@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Button, AsyncStorag
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 import { connect } from 'react-redux';
-import { getNotification } from '../../store/actions/index';
+import { getNotification, updateAppInfo } from '../../store/actions/index';
 
 class FindPlaceScreen extends Component {
     state = {
@@ -37,6 +37,7 @@ class FindPlaceScreen extends Component {
 
     getNoti = async () => {
         this.props.getNotificationHandler();
+        
     }
 
     render() {
@@ -70,6 +71,12 @@ class FindPlaceScreen extends Component {
 
         
     }
+
+    componentDidMount(){
+        if(this.props.appInfo.isOpened === false) {
+            this.props.getNotificationHandler().then(this.props.updateAppInfo({isOpened: true}));
+        }
+    }
     
 }
 const styles = StyleSheet.create({
@@ -91,13 +98,15 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        places: state.places.places
+        places: state.places.places,
+        appInfo: state.appInfo.appInfo
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getNotificationHandler: () => dispatch(getNotification())
+        getNotificationHandler: () => dispatch(getNotification()),
+        updateAppInfo: (appInfo)=>dispatch(updateAppInfo(appInfo));
     }
 }
 

@@ -8,7 +8,8 @@ const initialState = {
   notifications: {
     total: "",
     chat: "",
-    plan: ""
+    plan: "",
+    list: []
   }
 };
 

@@ -1,7 +1,8 @@
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, AppState } from 'react-native';
 
+import AuthLoadingScreen from './src/screens/AuthLoading/AuthLoading';
 import AuthScreen from './src/screens/Auth/Auth';
 import MainScreen from './src/screens/MainTabs/startMainTabs';
 
@@ -12,6 +13,10 @@ import configureStore from './src/store/configureStore';
 
 const AppNavigator = createSwitchNavigator(
   {
+
+    AuthLoading: {
+      screen: AuthLoadingScreen, 
+    },
     Auth: {
       screen: AuthScreen, 
       navigationOptions: ({navigation}) => ({
@@ -23,7 +28,7 @@ const AppNavigator = createSwitchNavigator(
     }
   },
   {
-    initialRouteName: "Auth"
+    initialRouteName: "AuthLoading"
   }
 );
 
@@ -40,6 +45,7 @@ export default class App extends Component {
       </Provider>
     );
   }
+
 }
 
 const styles = StyleSheet.create({

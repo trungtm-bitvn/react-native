@@ -3,10 +3,12 @@ import thunk from 'redux-thunk';
 
 import placeReducer from './reducers/places';
 import notificationReducer from './reducers/notification';
+import appInfoReducer from './reducers/appInfo';
 
 const rootReducer = combineReducers({
     places: placeReducer,
-    notifications: notificationReducer
+    notifications: notificationReducer,
+    appInfo: appInfoReducer
 });
 
 const configureStore = () => {

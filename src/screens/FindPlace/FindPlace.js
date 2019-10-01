@@ -106,7 +106,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getNotificationHandler: () => dispatch(getNotification()),
-        updateAppInfo: (appInfo)=>dispatch(updateAppInfo(appInfo));
+        updateAppInfo: (appInfo)=>dispatch(updateAppInfo(appInfo))
     }
 }
 

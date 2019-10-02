@@ -6,13 +6,19 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Button, AsyncStorag
 import PlaceList from '../../components/PlaceList/PlaceList';
 
 import { connect } from 'react-redux';
-import { getNotification, updateAppInfo } from '../../store/actions/index';
+import { getNotification, showLatestNotification, updateAppInfo } from '../../store/actions/index';
 
 class FindPlaceScreen extends Component {
-    state = {
-        isShowList: false,
-        findPlaceAnim: new Animated.Value(1),
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowList: false,
+            findPlaceAnim: new Animated.Value(1),
+        }
+        console.log('props at constructor');
+        console.log(this.props.appInfo.isOpened);
     }
+    
     static navigationOptions = {
         title: 'Find Places',
     }
@@ -72,10 +78,16 @@ class FindPlaceScreen extends Component {
         
     }
 
-    componentDidMount(){
+    componentDidMount() {
+        console.log('start Main');
         if(this.props.appInfo.isOpened === false) {
-            this.props.getNotificationHandler().then(this.props.updateAppInfo({isOpened: true}));
+            this.props.getNotificationHandler()
+            .then(() => this.props.updateAppInfo({isOpened: true}));
         }
+    }
+
+    componentDidUpdate() {
+        this.props.showLatestNotification(this.props.notifications.list);
     }
     
 }
@@ -99,6 +111,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         places: state.places.places,
+        notifications: state.notifications.notifications,
         appInfo: state.appInfo.appInfo
     }
 }
@@ -106,7 +119,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getNotificationHandler: () => dispatch(getNotification()),
-        updateAppInfo: (appInfo)=>dispatch(updateAppInfo(appInfo))
+        updateAppInfo: (appInfo) => dispatch(updateAppInfo(appInfo)),
+        showLatestNotification: (notifications) => dispatch(showLatestNotification(notifications))
     }
 }
 

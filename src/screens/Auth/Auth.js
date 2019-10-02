@@ -73,8 +73,8 @@ class AuthScreen extends Component {
       email: this.state.controls.email.value,
       password: this.state.controls.password.value
     };
-    await this.props.onLogin(authData);
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    this.props.onLogin(authData)
+    .then(Notifications.addListener(this._handleNotification));
     this.props.navigation.navigate("Main");
   };
 

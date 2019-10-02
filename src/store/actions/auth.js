@@ -1,6 +1,5 @@
 import {TRY_AUTH} from './actionTypes';
 import { AsyncStorage } from "react-native"; 
-import { getNotification } from "./index";
 
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
@@ -36,7 +35,7 @@ export const tryAuth = authData => {
         requestHeaders.set('Content-Type', 'multipart/form-data');
         requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=');
         fetch(
-            'http://1db82c39.ngrok.io/api/craftsmen/index', {
+            'http://dc0b5041.ngrok.io/api/craftsmen/index', {
                 method: 'POST',
                 headers: requestHeaders,
                 body: formData,

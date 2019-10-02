@@ -1,7 +1,8 @@
 import {
   GET_NOTI_INFO,
   CLEAR_NOTI_INFO,
-  UPDATE_NOTI_INFO
+  UPDATE_NOTI_INFO,
+  SHOW_LATEST_NOTI
 } from "../actions/actionTypes";
 
 const initialState = {
@@ -16,8 +17,6 @@ const initialState = {
 const maxState = "99+";
 
 const reducer = (state = initialState, action) => {
-  console.log("check action");
-  console.log(action);
   switch (action.type) {
     case GET_NOTI_INFO:
       return {

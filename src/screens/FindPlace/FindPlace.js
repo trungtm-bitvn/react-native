@@ -79,15 +79,13 @@ class FindPlaceScreen extends Component {
     }
 
     componentDidMount() {
-        console.log('start Main');
-        if(this.props.appInfo.isOpened === false) {
-            this.props.getNotificationHandler()
-            .then(() => this.props.updateAppInfo({isOpened: true}));
-        }
+        console.log('start fetch data and try to show alert');
+        this.props.getNotificationHandler()
+        .then(() => this.props.showLatestNotification(this.props.notifications.latest, this.props.appInfo.isOpened));
     }
 
     componentDidUpdate() {
-        this.props.showLatestNotification(this.props.notifications.list);
+        
     }
     
 }
@@ -120,7 +118,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getNotificationHandler: () => dispatch(getNotification()),
         updateAppInfo: (appInfo) => dispatch(updateAppInfo(appInfo)),
-        showLatestNotification: (notifications) => dispatch(showLatestNotification(notifications))
+        showLatestNotification: (notifications, isOpened) => dispatch(showLatestNotification(notifications, isOpened))
     }
 }
 

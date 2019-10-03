@@ -9,11 +9,11 @@ const initialState = {
   notifications: {
     total: "",
     chat: {
-      count: '',
+      count: "",
       list: []
     },
     plan: {
-      count: '',
+      count: "",
       list: []
     },
     latest: []
@@ -30,39 +30,43 @@ const reducer = (state = initialState, action) => {
         notifications: action.notifications
       };
     case CLEAR_NOTI_INFO:
-      const key = action.key
+      const key = action.key;
       if (key in state.notifications) {
         return {
           notifications: {
             ...state.notifications,
             [key]: {
-              count: '',
+              count: "",
               list: []
             }
           }
         };
       }
     case UPDATE_NOTI_INFO:
-        let count = maxState;
-        let total = maxState;
-        const updateKey = action.key;
+      let count = maxState;
+      let total = maxState;
+      const updateKey = action.key;
       if (
         updateKey in state.notifications &&
         state.notifications[updateKey].count !== ""
-        ) {
+      ) {
         if (
           state.notifications[updateKey].count !== "99" ||
           state.notifications[updateKey].count !== maxState
         ) {
-            count = (parseInt(state.notifications[updateKey]) + 1).toString();
-            total = (parseInt(state.notifications.total) + 1).toString();
+          count = (parseInt(state.notifications[updateKey]) + 1).toString();
+          total = (parseInt(state.notifications.total) + 1).toString();
         }
         return {
-            notifications: {
-                ...state.notifications,
-                [updateKey]: count,
-                total: total
-            }
+          notifications: {
+            ...state.notifications,
+            total: total,
+            [updateKey]: {
+              count: count,
+              list: state.notifications[updateKey].list.unshift(action.latest)
+            },
+            latest: action.latest
+          }
         };
       }
     default:

@@ -58,24 +58,15 @@ class AuthScreen extends Component {
     Dimensions.addEventListener("change", this.deviceRotateHandler);
   }
 
-  _handleNotification = (notification) => {
-    if('notificationType' in notification.data) {
-      notificationType = notification.data.notificationType
-      this.props.increaseNotification(notificationType);
-      console.log('notification data');
-      console.log(notification);
-      console.log('App state');
-      console.log(AppState.currentState);
-    }
-  };
   onLoginHandler = async () => {
     authData = {
       email: this.state.controls.email.value,
       password: this.state.controls.password.value
     };
-    this.props.onLogin(authData)
-    .then(Notifications.addListener(this._handleNotification));
-    this.props.navigation.navigate("Main");
+    Promise.all([this.props.onLogin(authData)]).then((response) => {
+      console.log('auth Done');
+      this.props.navigation.navigate("Main")
+    });
   };
 
   switchAuthModeHandler = () => {
@@ -267,7 +258,7 @@ const styles = StyleSheet.create({
 mapDispatchToProps = dispatch => {
   return {
     onLogin: authData => dispatch(tryAuth(authData)),
-    increaseNotification: key => dispatch(increaseNotificationByOne(key))
+    increaseNotification: (key, latestNoti) => dispatch(increaseNotificationByOne(key, latestNoti))
   };
 };
 

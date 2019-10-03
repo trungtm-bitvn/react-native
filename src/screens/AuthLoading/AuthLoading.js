@@ -15,7 +15,6 @@ class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
     this._bootstrapAsync();
-
   }
 
   _handleNotification = (notification) => {
@@ -26,7 +25,9 @@ class AuthLoadingScreen extends React.Component {
     }
     else if(notification.origin === 'received' && 'notificationType' in notification.data) {
       notificationType = notification.data.notificationType
-      this.props.increaseNotification(notificationType);
+      notificationType = notification.data.notificationType;
+      latestNoti = data;
+      this.props.increaseNotification(notificationType, latestNoti);
     }
   };
 
@@ -36,13 +37,10 @@ class AuthLoadingScreen extends React.Component {
 
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
-    if(userToken) {
-      Notifications.addListener(this._handleNotification)
-    } else {
-      this.props.navigation.navigate("Auth");
-    }
+    Notifications.addListener(this._handleNotification);
   };
 
+  
   // Render any loading content that you like here
   render() {
     return (
@@ -57,6 +55,8 @@ class AuthLoadingScreen extends React.Component {
     const userToken = await AsyncStorage.getItem("key");
     if(userToken) {
       this.props.navigation.navigate("Main");
+    } else {
+      this.props.navigation.navigate("Auth");
     }
   }
 }

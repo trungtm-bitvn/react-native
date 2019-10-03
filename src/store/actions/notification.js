@@ -2,7 +2,8 @@ import {
   GET_NOTI_INFO,
   CLEAR_NOTI_INFO,
   UPDATE_NOTI_INFO,
-  SHOW_LATEST_NOTI
+  SHOW_LATEST_NOTI,
+  UPDATE_APP_INFO
 } from "./actionTypes";
 import { AsyncStorage, Alert } from "react-native";
 
@@ -13,7 +14,7 @@ export const getNotification = () => {
     let requestHeaders = new Headers();
     requestHeaders.set("X-API-KEY", userToken);
     requestHeaders.set("Authorization", "Basic Yml0dm46Yml0dm4=");
-    fetch("http://dc0b5041.ngrok.io/api/sites/get_notification", {
+    return fetch("http://c2ba113e.ngrok.io/api/sites/get_notification", {
       method: "POST",
       headers: requestHeaders
     })
@@ -39,14 +40,15 @@ export const clearNotification = key => {
   };
 };
 
-export const increaseNotificationByOne = key => {
+export const increaseNotificationByOne = (key, latest) => {
   return {
     type: UPDATE_NOTI_INFO,
-    key: key
+    key: key,
+    latest: latest
   };
 };
 
-export const showLatestNotification = currentNotificationList => {
+export const showLatestNotification = (currentNotificationList, isOpened) => {
   return async dispatch => {
     const latestNotificationString = await AsyncStorage.getItem(
       "latestNotification",
@@ -60,39 +62,49 @@ export const showLatestNotification = currentNotificationList => {
 
     console.log('parse string');
     console.log(latestNotification);
-    stateNewestNotification = null;
-    if(currentNotificationList.length > 0) {
-      stateNewestNotification = currentNotificationList[0]
-    }
+    stateNewestNotification = currentNotificationList;
+    // if(currentNotificationList.length > 0) {
+    //   stateNewestNotification = currentNotificationList[0]
+    // }
 
     if (stateNewestNotification === null) {
       return;
     }
-
-    isShowAlert = false;
+    console.log('newest notification');
+    console.log(stateNewestNotification);
+    newNotificationComes = false;
     if (latestNotification === null) {
-      isShowAlert = true;
+      newNotificationComes = true;
     } else if (
       parseInt(stateNewestNotification.id) > parseInt(latestNotification.id)
     ) {
-      isShowAlert = true;
+      newNotificationComes = true;
     }
 
-    if (isShowAlert) {
+    if (newNotificationComes) {
       AsyncStorage.setItem(
         "latestNotification",
         JSON.stringify(stateNewestNotification)
       );
-      Alert.alert(stateNewestNotification.title, stateNewestNotification.content, [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") }
-      ]);
-      
+      console.log('isOpened is notification action');
+      console.log(isOpened)
+      if(isOpened === false) {
+        Alert.alert(stateNewestNotification.title, stateNewestNotification.content, [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]);
+        return dispatch({
+          type: UPDATE_APP_INFO,
+          appInfo: {
+            isOpened: true
+          }
+        })
+      }
     }
-    return;
+    return ;
   };
 };

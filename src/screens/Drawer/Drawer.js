@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform, AsyncStorage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Badge } from "react-native-elements";
 
@@ -14,8 +14,9 @@ class Drawer extends Component {
         title: 'Find Places',
     }
 
-    logout = () => {
-        this.props.logoutHandler();
+    logout = async () => {
+        // this.props.logoutHandler();
+        await AsyncStorage.clear();
         this.props.navigation.navigate('Auth');
     }
     render() {
@@ -23,11 +24,11 @@ class Drawer extends Component {
         console.log(this.props.notifications);
         let chatCount = null;
         let planCount = null;
-        if(this.props.notifications.chat) {
-            chatCount = <Badge value={this.props.notifications.chat} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
+        if(parseInt(this.props.notifications.chat.count) > 0) {
+            chatCount = <Badge value={this.props.notifications.chat.count} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
         }
-        if(this.props.notifications.plan) {
-            planCount = <Badge value={this.props.notifications.plan} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
+        if(parseInt(this.props.notifications.plan.count) > 0) {
+            planCount = <Badge value={this.props.notifications.plan.count} status="error" containerStyle={{ position: 'absolute', top: -6, left: 15 }}/>
         }
         return (
             <View style={styles.findPlaceContainer}>

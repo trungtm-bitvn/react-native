@@ -20,11 +20,11 @@ class AuthLoadingScreen extends React.Component {
 
   _handleNotification = (notification) => {
     console.log('start noti event');
-    if(notification.origin === 'selected'){
+    if(notification.origin === 'selected') {
       console.log('start noti selected')
       this.props.updateAppInfo({isOpened: true});
     }
-    else if('notificationType' in notification.data) {
+    else if(notification.origin === 'received' && 'notificationType' in notification.data) {
       notificationType = notification.data.notificationType
       this.props.increaseNotification(notificationType);
     }

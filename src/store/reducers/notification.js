@@ -8,9 +8,15 @@ import {
 const initialState = {
   notifications: {
     total: "",
-    chat: "",
-    plan: "",
-    list: []
+    chat: {
+      count: '',
+      list: []
+    },
+    plan: {
+      count: '',
+      list: []
+    },
+    latest: []
   }
 };
 
@@ -29,7 +35,10 @@ const reducer = (state = initialState, action) => {
         return {
           notifications: {
             ...state.notifications,
-            [key]: ""
+            [key]: {
+              count: '',
+              list: []
+            }
           }
         };
       }
@@ -39,11 +48,11 @@ const reducer = (state = initialState, action) => {
         const updateKey = action.key;
       if (
         updateKey in state.notifications &&
-        state.notifications[updateKey] !== ""
+        state.notifications[updateKey].count !== ""
         ) {
         if (
-          state.notifications[updateKey] !== "99" ||
-          state.notifications[updateKey] !== maxState
+          state.notifications[updateKey].count !== "99" ||
+          state.notifications[updateKey].count !== maxState
         ) {
             count = (parseInt(state.notifications[updateKey]) + 1).toString();
             total = (parseInt(state.notifications.total) + 1).toString();

@@ -19,15 +19,20 @@ class AuthLoadingScreen extends React.Component {
 
   _handleNotification = (notification) => {
     console.log('start noti event');
+    console.log(notification);
     if(notification.origin === 'selected') {
       console.log('start noti selected')
       this.props.updateAppInfo({isOpened: true});
     }
-    else if(notification.origin === 'received' && 'notificationType' in notification.data) {
-      notificationType = notification.data.notificationType
-      notificationType = notification.data.notificationType;
-      latestNoti = data;
-      this.props.increaseNotification(notificationType, latestNoti);
+    else if(notification.origin === 'received' && 'notification_type' in notification.data) {
+      latestNoti = notification.data;
+      console.log('latestNoti');
+      console.log(notification.data);
+      notification_type = latestNoti.notification_type
+
+      this.props.increaseNotification(notification_type, latestNoti);
+      console.log('increase notification result');
+      console.log(this.props.notifications);
     }
   };
 
@@ -71,10 +76,17 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = dispatch => {
   return {
       updateAppInfo: (appInfo) => dispatch(updateAppInfo(appInfo)),
-      increaseNotification: key => dispatch(increaseNotificationByOne(key))
+      increaseNotification: (key, latest) => dispatch(increaseNotificationByOne(key, latest))
+  }
+}
+const mapStateToProps = state => {
+  return {
+      places: state.places.places,
+      notifications: state.notifications.notifications,
+      appInfo: state.appInfo.appInfo
   }
 }
 
-export default connect(null, mapDispatchToProps)(AuthLoadingScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AuthLoadingScreen);
 
 

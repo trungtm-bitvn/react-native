@@ -35,7 +35,7 @@ export const tryAuth = authData => {
         requestHeaders.set('Content-Type', 'multipart/form-data');
         requestHeaders.set('Authorization', 'Basic Yml0dm46Yml0dm4=');
         return fetch(
-            'http://c2ba113e.ngrok.io/api/craftsmen/index', {
+            'http://bfd235fb.ngrok.io/api/craftsmen/index', {
                 method: 'POST',
                 headers: requestHeaders,
                 body: formData,

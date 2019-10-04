@@ -19,7 +19,7 @@ import { Badge } from "react-native-elements";
 
 class MenuButton extends Component {
   render() {
-    notification = this.props.notifications.total ? <Badge status="error" containerStyle={{ position: 'absolute', top: 2, left: 20 }}/> : null;
+    notification = parseInt(this.props.notifications.total)>0 ? <Badge status="error" containerStyle={{ position: 'absolute', top: 2, left: 20 }}/> : null;
     return (
       <TouchableOpacity
             onPress={() => {

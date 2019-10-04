@@ -9,6 +9,8 @@ import MainScreen from './src/screens/MainTabs/startMainTabs';
 import { Provider } from 'react-redux';
 import configureStore from './src/store/configureStore';
 
+import { showLatestNotification } from './src/store/actions/index';
+
 
 
 const AppNavigator = createSwitchNavigator(
@@ -38,12 +40,36 @@ const store = configureStore();
 
 
 export default class App extends Component {
+  state = {
+    appState: AppState.currentState,
+  };
   render() {
     return (
       <Provider store={store}>
           <AppContainer/>
       </Provider>
     );
+  }
+
+  _handleAppStateChange = (nextAppState) => {
+    if (
+      this.state.appState.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      isOpened = store.getState().appInfo.appInfo.isOpened;
+      latestNotification = store.getState().notifications.notifications.latest;
+      console.log('Is isOpened init ' + isOpened);
+      store.dispatch(showLatestNotification(latestNotification, isOpened));
+    }
+    this.setState({appState: nextAppState});
+  };
+
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
 }

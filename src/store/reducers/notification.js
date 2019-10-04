@@ -1,22 +1,21 @@
 import {
   GET_NOTI_INFO,
   CLEAR_NOTI_INFO,
-  UPDATE_NOTI_INFO,
-  SHOW_LATEST_NOTI
+  UPDATE_NOTI_INFO
 } from "../actions/actionTypes";
 
 const initialState = {
   notifications: {
-    total: "",
+    total: "0",
     chat: {
-      count: "",
+      count: "0",
       list: []
     },
     plan: {
-      count: "",
+      count: "0",
       list: []
     },
-    latest: []
+    latest: {}
   }
 };
 
@@ -31,13 +30,22 @@ const reducer = (state = initialState, action) => {
       };
     case CLEAR_NOTI_INFO:
       const key = action.key;
+      const id = action.id;
       if (key in state.notifications) {
+        if(key === 'total') {
+          return {
+            notifications: {
+              ...state.notifications,
+              total: "0"
+            }
+          }; 
+        }
         return {
           notifications: {
             ...state.notifications,
             [key]: {
-              count: "",
-              list: []
+              count: "0",
+              list: state.notifications[key].list.filter((list_item) => list_item.id !== id)
             }
           }
         };
@@ -48,13 +56,13 @@ const reducer = (state = initialState, action) => {
       const updateKey = action.key;
       if (
         updateKey in state.notifications &&
-        state.notifications[updateKey].count !== ""
+        state.notifications[updateKey].count !== "0"
       ) {
         if (
           state.notifications[updateKey].count !== "99" ||
           state.notifications[updateKey].count !== maxState
         ) {
-          count = (parseInt(state.notifications[updateKey]) + 1).toString();
+          count = (parseInt(state.notifications[updateKey].count) + 1).toString();
           total = (parseInt(state.notifications.total) + 1).toString();
         }
         return {
